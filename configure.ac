@@ -1,7 +1,7 @@
 AC_PREREQ(2.59)
 
-AC_INIT([kvspool], [1.0], [tdh@tkhanson.net])
-AC_CONFIG_SRCDIR(src/kvspool.c)
+AC_INIT([kvspool], [2.0], [tdh@tkhanson.net])
+AC_CONFIG_SRCDIR(src/kvset.c)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_HEADERS(config/config.h)
 AM_INIT_AUTOMAKE([foreign subdir-objects])
@@ -33,6 +33,6 @@ AC_CHECK_LIB(rdkafka,rd_kafka_new,
   AM_CONDITIONAL(HAVE_RDKAFKA,true),
   AM_CONDITIONAL(HAVE_RDKAFKA,false))
 
-AC_CONFIG_FILES(Makefile src/Makefile utils/Makefile)
+AC_CONFIG_FILES(Makefile src/Makefile libut/Makefile utils/Makefile)
 AC_OUTPUT
 

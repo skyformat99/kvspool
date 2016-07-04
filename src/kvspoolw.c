@@ -351,6 +351,29 @@ int kv_write_raw_frame(void*_sp, void *img, size_t len) {
   return rc;
 }
 
+void lock(int fd) {
+  struct flock flockstr;
+  flockstr.l_type = F_WRLCK;
+  flockstr.l_whence = SEEK_SET;
+  flockstr.l_start = 0;
+  flockstr.l_len = 0;
+
+  if ( fcntl(fd, F_SETLKW, &flockstr) < 0) {
+    fprintf(stderr,"fcntl lock: %s\n", strerror(errno));
+  }
+}
+void unlock(int fd) {
+  struct flock flockstr;
+  flockstr.l_type = F_UNLCK;
+  flockstr.l_whence = SEEK_SET;
+  flockstr.l_start = 0;
+  flockstr.l_len = 0;
+
+  if ( fcntl(fd, F_SETLKW, &flockstr) < 0) {
+    fprintf(stderr,"fcntl unlock: %s\n", strerror(errno));
+  }
+}
+
 int kv_spool_write(void*_sp, void *_set) {
   kv_spoolw_t *sp = (kv_spoolw_t*)_sp;
   kvset_t *set = (kvset_t*)_set;
@@ -372,6 +395,7 @@ int kv_spool_write(void*_sp, void *_set) {
 
   tpl_dump(tn, TPL_MEM, &buf, &len); len32 = (uint32_t)len;
   if (buf==NULL || len==0) goto done;
+  lock(sp->fd);
   if (write(sp->fd, buf, len) != len) goto done;
   if (write(sp->fd, &len32, sizeof(len32)) != sizeof(len32)) goto done;
   lseek(sp->fd, -1*sizeof(len32), SEEK_CUR);
@@ -379,6 +403,7 @@ int kv_spool_write(void*_sp, void *_set) {
 
   /* spool file and spool directory size check */
  done:
+  unlock(sp->fd);
   tpl_free(tn);
   if (buf) free(buf);
   check_sizes(sp, rc);

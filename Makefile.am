@@ -1,1 +1,2 @@
-SUBDIRS = src utils
+#SUBDIRS = src utils
+SUBDIRS = libut src 
