@@ -1,0 +1,11 @@
+set has 0 items
+adding two items to set
+set has 2 items
+k1 -> v1 (1)
+k2 -> v2 (2)
+clearing set
+set has 0 items
+adding two items to set
+set has 2 items
+k3 -> v3 (3)
+k4 -> v4 (4)
